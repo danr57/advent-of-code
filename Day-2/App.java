@@ -4,17 +4,20 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class App {
+
     public static void main(String[] args) throws FileNotFoundException {
 
-        Scanner sc = new Scanner(new File("input")).useDelimiter(",");
+        Scanner sc = new Scanner(new File("Day-2/input")).useDelimiter(",");
 
-        ArrayList<Integer> intcode = new ArrayList<Integer>();
+        ArrayList<Integer> originalIntcode = new ArrayList<Integer>();
 
         while (sc.hasNextInt()) {
-            intcode.add(sc.nextInt());
+            originalIntcode.add(sc.nextInt());
         }
         sc.close();
 
-        new MagicComputer(intcode);
+        MagicComputer steve = new MagicComputer(originalIntcode);
+
+        System.out.println("NounVerb: " + steve.findNounVerb());
     }
 }

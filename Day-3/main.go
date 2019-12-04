@@ -15,9 +15,14 @@ type coords struct {
 	y int64
 }
 
+type distances struct {
+	manhattan int64
+	pathDist  int64
+}
+
 func main() {
-	wire1 := map[coords]int64{}
-	wire2 := map[coords]int64{}
+	wire1 := map[coords]distances{}
+	wire2 := map[coords]distances{}
 
 	w, err := ioutil.ReadFile("input")
 	if err != nil {
@@ -30,12 +35,18 @@ func main() {
 	mapWire(wire1, wire1directions)
 	mapWire(wire2, wire2directions)
 
-	overlap := compareMaps(wire1, wire2)
-	fmt.Println("Manhattan distance to closest crossed wires:", overlap[0])
+	// Solution 1
+	solution1, _ := compareMaps(wire1, wire2)
+	fmt.Println("Manhattan distance to closest crossed wires:", solution1[0])
+
+	// Solution 2
+	_, solution2 := compareMaps(wire1, wire2)
+	fmt.Println("Path length to the closest crossed wires:", solution2[0])
 }
 
-func mapWire(wire map[coords]int64, route []string) {
+func mapWire(wire map[coords]distances, route []string) {
 	pos := coords{x: 0, y: 0}
+	p := int64(0)
 
 	for _, dir := range route {
 		d := (string(dir[0]))
@@ -46,37 +57,43 @@ func mapWire(wire map[coords]int64, route []string) {
 			for i := int64(0); i < n; i++ {
 				pos.y++
 				m := (math.Abs(float64(pos.x)) + math.Abs(float64(pos.y)))
-				wire[pos] = int64(m)
+				p++
+				wire[pos] = distances{manhattan: int64(m), pathDist: p}
 			}
 		case "D":
 			for i := int64(0); i < n; i++ {
 				pos.y--
 				m := (math.Abs(float64(pos.x)) + math.Abs(float64(pos.y)))
-				wire[pos] = int64(m)
+				p++
+				wire[pos] = distances{manhattan: int64(m), pathDist: p}
 			}
 		case "L":
 			for i := int64(0); i < n; i++ {
 				pos.x--
 				m := (math.Abs(float64(pos.x)) + math.Abs(float64(pos.y)))
-				wire[pos] = int64(m)
+				p++
+				wire[pos] = distances{manhattan: int64(m), pathDist: p}
 			}
 		case "R":
 			for i := int64(0); i < n; i++ {
 				pos.x++
 				m := (math.Abs(float64(pos.x)) + math.Abs(float64(pos.y)))
-				wire[pos] = int64(m)
+				p++
+				wire[pos] = distances{manhattan: int64(m), pathDist: p}
 			}
 		}
 	}
 }
 
-func compareMaps(wire1, wire2 map[coords]int64) (overlaps []int) {
+func compareMaps(wire1, wire2 map[coords]distances) (mh, pd []int) {
 
 	for a, b := range wire1 {
-		if _, p := wire2[a]; p {
-			overlaps = append(overlaps, int(b))
+		if c, p := wire2[a]; p {
+			mh = append(mh, int(b.manhattan))
+			pd = append(pd, int(b.pathDist)+int(c.pathDist))
 		}
 	}
-	sort.Ints(overlaps)
-	return overlaps
+	sort.Ints(mh)
+	sort.Ints(pd)
+	return mh, pd
 }

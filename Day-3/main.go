@@ -35,12 +35,12 @@ func main() {
 	mapWire(wire1, wire1directions)
 	mapWire(wire2, wire2directions)
 
+	solution1, solution2 := compareMaps(wire1, wire2)
+
 	// Solution 1
-	solution1, _ := compareMaps(wire1, wire2)
 	fmt.Println("Manhattan distance to closest crossed wires:", solution1[0])
 
 	// Solution 2
-	_, solution2 := compareMaps(wire1, wire2)
 	fmt.Println("Path length to the closest crossed wires:", solution2[0])
 }
 

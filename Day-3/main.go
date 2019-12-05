@@ -56,30 +56,26 @@ func mapWire(wire map[coords]distances, route []string) {
 		case "U":
 			for i := int64(0); i < n; i++ {
 				pos.y++
-				m := (math.Abs(float64(pos.x)) + math.Abs(float64(pos.y)))
 				p++
-				wire[pos] = distances{manhattan: int64(m), pathDist: p}
+				wire[pos] = distances{pathDist: p}
 			}
 		case "D":
 			for i := int64(0); i < n; i++ {
 				pos.y--
-				m := (math.Abs(float64(pos.x)) + math.Abs(float64(pos.y)))
 				p++
-				wire[pos] = distances{manhattan: int64(m), pathDist: p}
+				wire[pos] = distances{pathDist: p}
 			}
 		case "L":
 			for i := int64(0); i < n; i++ {
 				pos.x--
-				m := (math.Abs(float64(pos.x)) + math.Abs(float64(pos.y)))
 				p++
-				wire[pos] = distances{manhattan: int64(m), pathDist: p}
+				wire[pos] = distances{pathDist: p}
 			}
 		case "R":
 			for i := int64(0); i < n; i++ {
 				pos.x++
-				m := (math.Abs(float64(pos.x)) + math.Abs(float64(pos.y)))
 				p++
-				wire[pos] = distances{manhattan: int64(m), pathDist: p}
+				wire[pos] = distances{pathDist: p}
 			}
 		}
 	}
@@ -89,6 +85,7 @@ func compareMaps(wire1, wire2 map[coords]distances) (mh, pd []int) {
 
 	for a, b := range wire1 {
 		if c, p := wire2[a]; p {
+			b.manhattan = int64(math.Abs(float64(a.x)) + math.Abs(float64(a.y)))
 			mh = append(mh, int(b.manhattan))
 			pd = append(pd, int(b.pathDist)+int(c.pathDist))
 		}

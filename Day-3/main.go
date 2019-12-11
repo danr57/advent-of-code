@@ -85,8 +85,7 @@ func compareMaps(wire1, wire2 map[coords]distances) (mh, pd []int) {
 
 	for a, b := range wire1 {
 		if c, p := wire2[a]; p {
-			b.manhattan = int64(math.Abs(float64(a.x)) + math.Abs(float64(a.y)))
-			mh = append(mh, int(b.manhattan))
+			mh = append(mh, int(math.Abs(float64(a.x))+math.Abs(float64(a.y))))
 			pd = append(pd, int(b.pathDist)+int(c.pathDist))
 		}
 	}
